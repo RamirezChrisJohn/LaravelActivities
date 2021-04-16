@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\PostController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +19,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::resource('/posts', 'PostController', ['middleware' => 'auth', 'uses' => 'FooController@index']);
+
+Auth::routes();
+
+
+Route::get('/home','HomeController@index')->name('home');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
