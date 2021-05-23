@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,18 +16,26 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
 });
+Route::resources([
+    '/posts' => PostController::class,
+    '/home' => HomeController::class,
+    '/login' => LoginController::class,
+]);
+Auth::routes(); */
 
-Route::resource('/posts', 'PostController', ['middleware' => 'auth', 'uses' => 'FooController@index']);
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 
 Auth::routes();
 
+Route::get('/home', function () {
+    return redirect('/posts');
+});
 
-Route::get('/home','HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/delete-blank-post', [App\Http\Controllers\PostController::class, 'deleteBlank']);
+Route::get('/posts-archive', [App\Http\Controllers\PostController::class, 'archive']);
+Route::get('/posts/{id}/restore', [App\Http\Controllers\PostController::class, 'restore']);
+Route::resource('/posts','PostController');
+Route::resource('/comments','CommentController');
